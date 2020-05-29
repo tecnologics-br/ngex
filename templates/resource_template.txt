@@ -1,0 +1,92 @@
+package {{classe.package_name}}.resources;
+
+import java.io.InputStream;
+import java.net.URI;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
+import javax.sql.DataSource;
+import javax.validation.Valid;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import {{classe.package_name}}.model.{{classe.class_name}};
+import {{classe.package_name}}.repository.{{classe.class_name}}Repository;
+
+@RestController
+@RequestMapping("{{classe.class_name.lower()}}s")
+public class {{classe.class_name}}Resource {
+
+   @Autowired
+   private {{classe.class_name}}Repository {{classe.class_name.lower()}}Repository;
+
+   @GetMapping
+   public List<{{classe.class_name}}> findAll() {
+      return {{classe.class_name.lower()}}Repository.findAll();
+   }
+
+   @PostMapping
+   public ResponseEntity<{{classe.class_name}}> salvar(@Valid @RequestBody {{classe.class_name}} {{classe.class_name.lower()}}) {
+
+      {{classe.class_name}} {{classe.class_name.lower()}}Salvo = {{classe.class_name.lower()}}Repository.save({{classe.class_name.lower()}});
+
+      URI location = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
+            .buildAndExpand({{classe.class_name.lower()}}Salvo.getId()).toUri();
+
+      return ResponseEntity.created(location).body({{classe.class_name.lower()}}Salvo);
+   }
+
+   @PutMapping("/{id}")
+   public ResponseEntity<{{classe.class_name}}> atualizar(@PathVariable Integer id, @Valid @RequestBody {{classe.class_name}} {{classe.class_name.lower()}}) {
+
+      try {
+
+         {{classe.class_name}} {{classe.class_name.lower()}}Salvo = clienteRepository.findById(id).get();
+
+         BeanUtils.copyProperties({{classe.class_name.lower()}}, {{classe.class_name.lower()}}Salvo, "id");
+         clienteRepository.save(clienteSalvo);
+
+         return ResponseEntity.ok({{classe.class_name.lower()}}Salvo);
+
+      } catch (NoSuchElementException e) {
+         return ResponseEntity.notFound().build();
+      }
+   }
+
+   @GetMapping("/{id}")
+   public ResponseEntity<{{classe.class_name}}> findById(@PathVariable Integer id) {
+      try {
+         {{classe.class_name}} {{classe.class_name.lower()}} = {{classe.class_name.lower()}}Repository.findById(id).get();
+         return ResponseEntity.ok({{classe.class_name.lower()}});
+      } catch (NoSuchElementException e) {
+         return ResponseEntity.notFound().build();
+      }
+   }
+
+   @DeleteMapping("/{id}")
+   @ResponseStatus(HttpStatus.NO_CONTENT)
+   public void remove(@PathVariable Integer id) {
+      {{classe.class_name.lower()}}Repository.deleteById(id);
+   }
+
+}

@@ -1,0 +1,10 @@
+package {{classe.package_name}}.model;
+
+@Entity
+@Table(name="{{classe.entity_name}}")
+public class {{classe.class_name}} {
+{% for i in fields %}
+   @Column(name = "{{i.field_name}}")
+   private {{i.attribute_type}} {{i.attribute_name}};
+{% endfor %}
+}

@@ -1,0 +1,10 @@
+package {{classe.package_name}}.repository;
+
+import {{classe.package_name}}.model.{{classe.class_name}};
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface {{classe.class_name}}Repository extends JpaRepository<{{classe.class_name}}, Integer> {
+
+}
